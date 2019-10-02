@@ -40,6 +40,9 @@
         </div>
         
         <script>
+            // var rand = Math.random();
+            // document.write(rand);
+
             var oneBtn = document.getElementById('calc-one');
             var twoBtn = document.getElementById('calc-two');
             var threeBtn = document.getElementById('calc-three');
@@ -65,20 +68,95 @@
 
             var updateDisplayVal = (clickObj) => {
                 var btnText = clickObj.target.innerText;
-                if (displayVal === '0'){
-                    display = '';
-                }
+
+                if (displayVal === '0')
+                    displayVal = '';
+                
                 displayVal += btnText;
-                // document.write(displayVal);
                 displayValElement.innerText = displayVal;
+            }
+
+            var performOperation = (clickObj) => {
+                var operator = clickObj.target.innerText;
+
+                switch (operator) {
+                    case '+':
+                        pendingVal = displayVal;
+                        displayVal = '0';
+                        displayValElement.innerText = displayVal;
+                        evalStringArray.push(pendingVal);
+                        evalStringArray.push('+');
+                        break;
+
+                    case '-':
+                        pendingVal = displayVal;
+                        displayVal = '0';
+                        displayValElement.innerText = displayVal;
+                        evalStringArray.push(pendingVal);
+                        evalStringArray.push('-');
+                        break;
+
+                    case 'x':
+                        pendingVal = displayVal;
+                        displayVal = '0';
+                        displayValElement.innerText = displayVal;
+                        evalStringArray.push(pendingVal);
+                        evalStringArray.push('*');
+                        break;
+
+                    case '&#247':
+                        pendingVal = displayVal;
+                        displayVal = '0';
+                        displayValElement.innerText = displayVal;
+                        evalStringArray.push(pendingVal);
+                        evalStringArray.push('/');
+                        break;
+
+                    case '=':
+                        evalStringArray.push(displayVal);
+                        var evaluation = eval(evalStringArray.join(' '))
+                        displayVal = evaluation + '';
+                        displayValElement.innerText = displayVal;
+                        evalStringArray = [];
+                        break;
+                    
+                    default:
+                        break;
+                }
             }
 
             for (let i = 0; i < calcNumBtns.length; i++){
                 calcNumBtns[i].addEventListener('click', updateDisplayVal, true);
             }
-            // for (i = 0; i < calc_operator_btns.length; i++){
-            //     calc_operator_btns[i].addEventListener('click', performOperation, false);
-            // }
+            for (i = 0; i < calc_operator_btns.length; i++){
+                calc_operator_btns[i].addEventListener('click', performOperation, false);
+            }
+            
+            clearBtn.onclick = () => {
+                displayVal = '0';
+                pendingVal = undefined;
+                evalStringArray = [];
+                displayValElement.innerHTML = displayVal;
+            }
+
+            backspaceBtn.onclick = () => {
+                displayVal = displayVal.substring(0, displayVal.length - 1);
+                if (displayVal === '')
+                    displayVal = '0';
+                displayValElement.innerHTML = displayVal;
+            }
+
+            decimalBtn.onclick = () => {
+                displayVal += '.';
+                displayValElement.innerHTML = displayVal;
+            }
+            decimalBtn.onclick = () => {
+                if (!displayVal.includes('.'))
+                    displayVal += '.';
+                displayValElement.innerHTML = displayVal;
+            }
+
+
         </script>
     </body>
 </html>
